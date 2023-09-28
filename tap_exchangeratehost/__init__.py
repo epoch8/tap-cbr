@@ -41,7 +41,7 @@ def make_schema(record: dict) -> dict:
     return schema
 
 
-def do_sync(access_key, source, date_start: str, date_stop: Optional[str] = None) -> Optional[str]:
+def do_sync(access_key, source, date_start: str, date_stop: str, currencies: Optional[list] = None) -> Optional[str]:
 
     def make_retry(url, params, n_retries, delay_seconds):
         for retry in range(n_retries):
@@ -78,6 +78,9 @@ def do_sync(access_key, source, date_start: str, date_stop: Optional[str] = None
             "source": source,
             "date": date_to_process
         }
+
+        if currencies:
+            params['currencies'] = ','.join(currencies)
 
         logger.info(json.dumps(params))
 
@@ -148,7 +151,7 @@ def main():
         or (date.today() - timedelta(days=1)).strftime(DATE_FORMAT)
     )
 
-    do_sync(config.get("access_key"), config.get("source", "USD"), date_start, date_stop)
+    do_sync(config.get("access_key"), config.get("source", "USD"), date_start, date_stop, config.get("currencies"))
 
 
 if __name__ == "__main__":
