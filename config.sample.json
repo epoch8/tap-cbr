@@ -1,5 +1,6 @@
 {
-    "base": "JPY",
-    "start_date": "2021-04-01",
-    "end_date": "2021-04-06"
+    "access_key": "XXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "source": "JPY",
+    "date_start": "2021-04-01",
+    "date_stop": "2021-04-06"
 }
