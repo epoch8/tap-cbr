@@ -139,13 +139,13 @@ def main():
     date_start = (
         config.get("date_start")
         or state.get("date_start")
-        or (date.today() + timedelta(days=-1)).strftime(DATE_FORMAT)
+        or (date.today() - timedelta(days=1)).strftime(DATE_FORMAT)
     )
     
     date_stop = (
         config.get("date_stop")
         or state.get("date_stop")
-        or (date.today() + timedelta(days=-1)).strftime(DATE_FORMAT)
+        or (date.today() - timedelta(days=1)).strftime(DATE_FORMAT)
     )
 
     do_sync(config.get("access_key"), config.get("source", "USD"), date_start, date_stop)
