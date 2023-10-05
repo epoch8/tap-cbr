@@ -1,2 +1,2 @@
 # Add additional files to be included in the package
-# recursive-include tap_exchangeratehost/data *
+# recursive-include tap_cbr/data *

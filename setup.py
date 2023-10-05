@@ -9,13 +9,13 @@ with open("README.md", "r") as fh:
 
 
 setup(
-    name="tap-exchangeratehost",
+    name="tap-cbr",
     version=VERSION,
     description="Singer.io tap for extracting currency exchange rate data from the exchangerate.host API",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Daigo Tanaka, Anelen Co., LLC",
-    url="http://github.com/anelendata/tap-exchangeratehost",
+    url="https://github.com/epoch8/tap-cbr",
     classifiers=[
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: Apache Software License",
@@ -35,9 +35,9 @@ setup(
     ],
     entry_points="""
     [console_scripts]
-    tap-cbr-xml-daily=tap_cbr_xml_daily:main
+    tap-cbr=tap_cbr:main
     """,
-    packages=["tap_cbr_xml_daily"],
+    packages=["tap_cbr"],
     package_data={
         # Use MANIFEST.ini
     },
