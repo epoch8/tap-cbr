@@ -80,13 +80,16 @@ def do_sync(date_start: str, date_stop: str, currencies: Optional[list] = None) 
                 logger.info(f'Seconds before next retry:\t{delay}')
                 time.sleep(delay)
             else:
-                if response.status_code != 200:
+                if response.status_code != 200 and 'Курс ЦБ РФ на данную дату не установлен или указана ошибочная дата.' not in response.text:
                     delay = delay_seconds * 2 ** retry
                     logger.info(f'Response URL:\t{response.url}')
                     logger.info(f'Response status code:\t{response.status_code}')
                     logger.info(f'Response text:\t{response.text}')
                     logger.info(f'Seconds before next retry:\t{delay}')
                     time.sleep(delay)
+                elif 'Курс ЦБ РФ на данную дату не установлен или указана ошибочная дата.' in response.text:
+                    logger.warning(f'Response text:\t{response.text}')
+                    return None
                 else:
                     return response
             
@@ -129,6 +132,8 @@ def do_sync(date_start: str, date_stop: str, currencies: Optional[list] = None) 
                     else:
                         record[valute] = valutes[valute]['Value']
                 data = data + [record]
+        else:
+            record = None
 
         date_to_process = (date.fromisoformat(date_to_process) + timedelta(days=1)).strftime(DATE_FORMAT)
 
