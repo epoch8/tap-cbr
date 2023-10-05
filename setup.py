@@ -35,9 +35,9 @@ setup(
     ],
     entry_points="""
     [console_scripts]
-    tap-exchangeratehost=tap_exchangeratehost:main
+    tap-cbr-xml-daily=tap_cbr_xml_daily:main
     """,
-    packages=["tap_exchangeratehost"],
+    packages=["tap_cbr_xml_daily"],
     package_data={
         # Use MANIFEST.ini
     },

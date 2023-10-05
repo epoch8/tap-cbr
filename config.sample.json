@@ -1,7 +1,4 @@
 {
-    "access_key": "XXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "source": "JPY",
     "date_start": "2021-04-01",
-    "date_stop": "2021-04-06",
-    "currencies": ["EUR", "USD"]
+    "date_stop": "2021-04-06"
 }
