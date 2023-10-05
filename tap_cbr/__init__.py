@@ -92,6 +92,12 @@ def do_sync(date_start: str, date_stop: str, currencies: Optional[list] = None) 
             
         logger.warning(f'Failed after {n_retries} attempt(s)!')
 
+    if type(currencies) != list:
+        logger.warning(f'Setting "currencies" is not a list! Ignoring.')
+        currencies = None
+    else:
+        logger.info(f'Currencies specified:\n{currencies}')
+
     date_to_process = date_start
     data = []
     state = {
@@ -100,11 +106,10 @@ def do_sync(date_start: str, date_stop: str, currencies: Optional[list] = None) 
     }
 
     while date.fromisoformat(date_to_process) <= date.fromisoformat(date_stop):
-        time.sleep(1)
+        time.sleep(2)
         logger.info(f'Date to process:\t{date_to_process}')
 
-        endpoint = ENDPOINT.replace('DATE', date_to_process.strftime('%Y//%m//%d'))
-        print(endpoint)
+        endpoint = ENDPOINT.replace('DATE', date.fromisoformat(date_to_process).strftime('%Y//%m//%d'))
 
         response = make_retry(
             url=endpoint,
@@ -116,15 +121,16 @@ def do_sync(date_start: str, date_stop: str, currencies: Optional[list] = None) 
         if response:
             valutes = response.json().get('Valute')
             if valutes:
-                record = dict(
-                    zip(*[[valute, valutes[valute]['Value']] for valute in valutes])
-                )
-                record['date'] = date_to_process
+                record = {'date': date_to_process}
+                for valute in valutes:
+                    if currencies:
+                        if valute in currencies:
+                            record[valute] = valutes[valute]['Value']
+                    else:
+                        record[valute] = valutes[valute]['Value']
                 data = data + [record]
 
         date_to_process = (date.fromisoformat(date_to_process) + timedelta(days=1)).strftime(DATE_FORMAT)
-    
-    print(data)
 
     if record:
         singer.write_schema("exchange_rate", make_schema(record), "date")
