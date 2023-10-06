@@ -124,13 +124,15 @@ def do_sync(date_start: str, date_stop: str, currencies: Optional[list] = None) 
         if response:
             valutes = response.json().get('Valute')
             if valutes:
-                record = {'date': date_to_process}
+                if currencies:
+                    record = dict(zip(currencies, [None] * len(currencies)))
                 for valute in valutes:
                     if currencies:
                         if valute in currencies:
                             record[valute] = valutes[valute]['Value']
                     else:
                         record[valute] = valutes[valute]['Value']
+                record = {'date': date_to_process}
                 data = data + [record]
         else:
             record = None
