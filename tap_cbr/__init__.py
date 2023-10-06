@@ -138,7 +138,7 @@ def do_sync(date_start: str, date_stop: str, currencies: Optional[list] = None) 
         date_to_process = (date.fromisoformat(date_to_process) + timedelta(days=1)).strftime(DATE_FORMAT)
 
     if len(data) > 0:
-        singer.write_schema("exchange_rate", make_schema(record), "date")
+        singer.write_schema("exchange_rate_cbr", make_schema(record), "date")
         for record in data:
             singer.write_records("exchange_rate", [record])
             state['date_start'] = (date.fromisoformat(record['date']) + timedelta(days=1)).strftime(DATE_FORMAT)
