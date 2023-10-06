@@ -124,22 +124,20 @@ def do_sync(date_start: str, date_stop: str, currencies: Optional[list] = None) 
         if response:
             valutes = response.json().get('Valute')
             if valutes:
-                if currencies:
-                    record = dict(zip(currencies, [None] * len(currencies)))
-                for valute in valutes:
-                    if currencies:
-                        if valute in currencies:
-                            record[valute] = valutes[valute]['Value']
-                    else:
-                        record[valute] = valutes[valute]['Value']
                 record = {'date': date_to_process}
+                if currencies:
+                    for valute in currencies:
+                        record[valute] = valutes.get(valute, {}).get('Value')
+                        record[f'{valute}_Nominal'] = valutes.get(valute, {}).get('Nominal')
+                else:
+                    for valute in valutes:
+                        record[valute] = valutes[valute].get('Value')
+                        record[f'{valute}_Nominal'] = valutes[valute].get('Nominal')
                 data = data + [record]
-        else:
-            record = None
 
         date_to_process = (date.fromisoformat(date_to_process) + timedelta(days=1)).strftime(DATE_FORMAT)
 
-    if record:
+    if len(data) > 0:
         singer.write_schema("exchange_rate", make_schema(record), "date")
         for record in data:
             singer.write_records("exchange_rate", [record])
